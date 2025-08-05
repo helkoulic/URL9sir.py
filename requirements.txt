@@ -1,0 +1,2 @@
+pyshorteners==1.0.1
+urllib3==2.5.0
