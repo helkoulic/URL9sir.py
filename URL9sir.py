@@ -1,8 +1,17 @@
 #bsmlh
-import sys, pyshorteners
-from urllib.parse import urlparse
-from ping3 import ping
+
+try:
+    from urllib.parse import urlparse
+    import pyshorteners
+except ModuleNotFoundError:
+    print("""
+You need to install the modules listed in the 'requirements.txt' file to run the script. 
+Use the following command:          
+pip install -r requirements.txt
+          """)
+    exit()
 import socket
+import sys
 
 
 #------------The help menu-------------------------------------------------------
@@ -164,3 +173,4 @@ elif IsSaveOutput.lower() in ["yes", "ye", "y"]:
     with open(FileName+".txt" or "URL9sir.txt", 'a') as FILE:
         sys.stdout = FILE
         main()
+
