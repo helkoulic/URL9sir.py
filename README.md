@@ -45,4 +45,6 @@ python3 URL9sir.py --force example.com  google.com colixtrans.web.app
 
 ### Use cases:
 
-##
+- Ideal for platforms with strict character limits, such as SMS and social media.
+- Short URLs reduce QR code complexity, improving scan reliability.
+- Long URLs appear cluttered and untrustworthy, whereas short URLs enhance credibility.
