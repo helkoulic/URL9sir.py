@@ -96,7 +96,7 @@ def socket_connect_client(URL):
     client.connect((URL, 80))
 
     # Send some data
-    client.send(b"GET / HTTP\1.1\r\nHOST: google.com\r\n\r\n")
+    client.send(f"GET / HTTP/1.1\r\nHost: {URL}\r\n\r\n".encode("utf-8"))
 
     print(f"{URL} is up!")
 
@@ -173,4 +173,5 @@ elif IsSaveOutput.lower() in ["yes", "ye", "y"]:
     with open(FileName+".txt" or "URL9sir.txt", 'a') as FILE:
         sys.stdout = FILE
         main()
+
 
