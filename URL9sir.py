@@ -126,7 +126,6 @@ def main():
                 print(f"{URL} is down :c")        
                 return
             URL_shorteners(URL)
-            socket_connect_client().client.close()
             
         
         # Force output the link even if the host is down
@@ -147,9 +146,7 @@ def main():
                                 except socket.gaierror:
                                     print(f"{URL} is down :c") 
                                     URL_shorteners(URL)
-                                   
-                                socket_connect_client().client.close()  
-                       
+                                                          
                     else:
                         pass_parse_check_exe(ARG)                       
                         print(".... ... .. .")
@@ -173,5 +170,6 @@ elif IsSaveOutput.lower() in ["yes", "ye", "y"]:
     with open(FileName+".txt" or "URL9sir.txt", 'a') as FILE:
         sys.stdout = FILE
         main()
+
 
 
