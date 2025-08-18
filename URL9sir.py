@@ -1,50 +1,39 @@
 #bsmlh
-
 try:
     from urllib.parse import urlparse
     import pyshorteners
 except ModuleNotFoundError:
     print("""
-You need to install the modules listed in the 'requirements.txt' file to run the script. 
+You need to install the modules listed in the 'requirements.txt' file in order to be able to run the script. 
 Use the following command:          
 pip install -r requirements.txt
           """)
     exit()
+import argparse
 import socket
-import sys
+import sys 
 
 
-#------------The help menu-------------------------------------------------------
-# If the script name is the only given input
-def Help(): 
-    print("""
-This is the help menu of URL9sir.py
-                  
-Usage: python3 URL9sir.py [options] <example1.com> <example2.com> <exampleN.com>
-        
-Options:
-        -help / -h      Display this help menu
-        -force / -f     Get the shortener link if the website is down (or the tool failed to check if its up)
-                  
-""")
+
+# The help menu
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+            description="A URL shortener"
+    )
+    parser.add_argument('URL', type=str, nargs='*')
+    parser.add_argument('-f', '--force', action='store_true', help='Get the shortener link even if the website is down (or the tool failed to check if its availability)')
+
+    args = parser.parse_args()
+# Usage: python3 URL9sir.py [options] <example1.com> <example2.com> <exampleN.com>
 
 
-# If no aditional arguments are given
+# If no aditional arguments are given show the help menu and exit
 if len(sys.argv) == 1: 
-    Help()
+    parser.print_help()
     exit()
 
-# If a help argument is given
-elif sys.argv[1].lower() in ["-help", "--help", "help", "-h", "h" ]:
-    Help()
-    exit()
 
-#-----------------------------------------------------------------------------------
-
-
-
-
-#--------------The script Banner----------------------------------------------------
+# The script Banner
 print("""
 ██╗   ██╗██████╗ ██╗     █████╗ ███████╗██╗██████╗    ██████╗ ██╗   ██╗
 ██║   ██║██╔══██╗██║    ██╔══██╗██╔════╝██║██╔══██╗   ██╔══██╗╚██╗ ██╔╝
@@ -52,12 +41,12 @@ print("""
 ██║   ██║██╔══██╗██║     ╚═══██║╚════██║██║██╔══██╗   ██╔═══╝   ╚██╔╝  
 ╚██████╔╝██║  ██║███████╗█████╔╝███████║██║██║  ██║██╗██║        ██║   
  ╚═════╝ ╚═╝  ╚═╝╚══════╝╚════╝ ╚══════╝╚═╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   """)
-#------------------------------------------------------------------------------------
 
 
 # Display an input to choose which URL shortener service to use, or use all of them
 Service = input("Pick a service :> clckru[1] isgd[2] dagd[3] ALL[0]: ")
 
+# Display an input to choose if the output should be saved in a file or not
 IsSaveOutput = input("Do you want to save the output [Y/n]? (press ENTER to skip) ")
 
 
@@ -84,7 +73,6 @@ def URL_shorteners(URL):
         print(f"{URL} => {S.dagd.short(URL)}")
 
 
-
 def socket_connect_client(URL):
     # Create socket object 
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -109,67 +97,46 @@ def parse_URL(URL):
     else:
         Host
 
+
 def main():
-
-        #Pass more than one URL at once
-        def pass_parse_check_exe(A):
-            
+    # To pass more than one URL at once
+    for LINK in args.URL:
+        def pass_parse_check_exe():
             # Get input (the website link) from STDIN and pass it as an argument to the function
-            URL = sys.argv[A]
-            
+                        
+                parse_URL(LINK)
 
-            parse_URL(URL)
+                try:
+                    socket_connect_client(LINK)
+                except socket.gaierror:
+                    print(f"{LINK} is down :c")
+                    print("Try --force to get the link")        
+                    return
+                URL_shorteners(LINK)
+        if args.force == False:
+            pass_parse_check_exe()
 
+
+
+        else:
+            parse_URL(LINK)
             try:
-                socket_connect_client(URL)
+                socket_connect_client(LINK)
+                URL_shorteners(LINK)
+        
             except socket.gaierror:
-                print(f"{URL} is down :c")        
-                return
-            URL_shorteners(URL)
-            
-        
-        # Force output the link even if the host is down
-        for ARG in range(1,1000):
-            try:
-                    if sys.argv[ARG].lower() in ["--force", "-force", "-f"]:
-                                    
-                        # Get input(the URL link) from STDIN and pass it as an argument to the function
-                        for ARG in range(2,1000):       
-                                URL = sys.argv[ARG]
-                                
-                                parse_URL(URL)
+                print(f"{LINK} is down :c") 
+                URL_shorteners(LINK)
 
-                                try:
-                                    socket_connect_client(URL)
-                                    URL_shorteners(URL)
-        
-                                except socket.gaierror:
-                                    print(f"{URL} is down :c") 
-                                    URL_shorteners(URL)
-                                                          
-                    else:
-                        pass_parse_check_exe(ARG)                       
-                        print(".... ... .. .")
-                    
-            except:
-                break
-
-
-
-# SAVE INPUT
-# NO no N n 
+# Save the output in a txt file
 if IsSaveOutput.lower() in ["no", "n", ""]:   
     main()
 
-# yes y Y ye YA YES YS MHM
 elif IsSaveOutput.lower() in ["yes", "ye", "y"]:
     FileName = input("File name: ")
-    
     print("Wait..")
-    # Save the output in a file
+    
     with open(FileName+".txt" or "URL9sir.txt", 'a') as FILE:
         sys.stdout = FILE
         main()
-
-
 
