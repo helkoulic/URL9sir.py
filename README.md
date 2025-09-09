@@ -21,7 +21,7 @@ pip install -r requirements.txt
 
 4. Run the script:
 ```
-python3 URL9sir.py -help
+python3 URL9sir.py --help
 ```
 
 ### Usage:
